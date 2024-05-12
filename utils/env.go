@@ -7,5 +7,5 @@ var (
 	Env_TracingServiceName = os.Getenv("TRACING_SERVICE_NAME")
 	Env_OLTPEndpoint       = os.Getenv("OLTP_ENDPOINT")
 
-	CRDB_DSN = os.Getenv("CRDB_DSN")
+	REDIS_LISTEN = GetEnvOrDefault("REDIS_LISTEN", "0.0.0.0:6379")
 )
