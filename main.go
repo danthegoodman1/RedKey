@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
+	"sync"
 	"syscall"
 	"time"
 
@@ -35,7 +36,11 @@ func main() {
 			os.Exit(1)
 		}
 	}()
-	go redisListen(utils.REDIS_LISTEN)
+	memDB := MemoryDB{
+		Keys: map[string]IMemoryDataType{},
+		mu:   &sync.RWMutex{},
+	}
+	go redisListen(utils.Env_RedisListen, &memDB)
 
 	c := make(chan os.Signal, 1)
 	signal.Notify(c, os.Interrupt, syscall.SIGTERM)

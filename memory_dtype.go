@@ -3,7 +3,7 @@ package main
 import "github.com/tidwall/redcon"
 
 type (
-	MemoryDataType interface {
+	IMemoryDataType interface {
 		// `mutated` is whether this command modified data.
 		// If the command was a no-op (e.g. delete something that didn't exist) it is safe
 		// to return `false`, however it is also safe to return `true` no matter what if
@@ -17,4 +17,8 @@ type (
 
 		SizeBytes() uint64
 	}
+)
+
+const (
+	TypeString = "string"
 )

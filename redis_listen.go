@@ -1,21 +1,28 @@
 package main
 
 import (
+	"github.com/samber/lo"
 	"github.com/tidwall/redcon"
 	"strings"
 )
 
-func redisListen(addr string) {
+func redisListen(addr string, memDB *MemoryDB) {
 	err := redcon.ListenAndServe(addr,
-		func(conn redcon.Conn, cmd redcon.Command) {
-			switch strings.ToLower(string(cmd.Args[0])) {
+		func(conn redcon.Conn, args redcon.Command) {
+			cmd := strings.ToLower(string(args.Args[0]))
+			argStr := lo.Map(args.Args[1:], func(item []byte, index int) string {
+				return string(item)
+			})
+			switch cmd {
 			default:
-				conn.WriteError("ERR unknown command '" + string(cmd.Args[0]) + "'")
+				conn.WriteError("ERR unknown command '" + string(args.Args[0]) + "'")
 			case "ping":
 				conn.WriteString("PONG")
 			case "quit":
 				conn.WriteString("OK")
 				conn.Close()
+			case "set":
+				memDB.handleSet(conn, "set", argStr)
 			}
 		},
 		func(conn redcon.Conn) bool {
