@@ -48,4 +48,5 @@ func (m *MemoryTypeString) handleSet(conn redcon.Conn, args []string) (bool, err
 	}
 
 	// TODO implement me
+	panic("implement me")
 }
